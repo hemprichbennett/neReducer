@@ -26,6 +26,9 @@ setup <- function(iteration, net, netname=NA, n_col){
 }
 
 
+
+#Inputting a list
+
 #A horrendous giant nested apply, but it works
 n_iterations <- 100
 list_output <-  sapply(seq(1,n_iterations), function(it)
@@ -38,7 +41,7 @@ bigdf <- do.call(rbind, list_output)
 
 
 
-
+#Inputting a single matrix
 
 
 mat_output <- sapply(seq(1,n_iterations), function(it)
