@@ -1,12 +1,12 @@
 Package: netReducer
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Reduces the number of individuals used to make a composite matrix, analysing the impact
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: person("David", "Hemprich-Bennett", email = "hemprich.bennett@gmail.com",role = c("aut", "cre"))
+Maintainer: David Hemprich-Bennett <hemprich.bennett@gmail.com>
+Description: The package takes your raw matrices, and repeatedly analyses a given subset of nodes, so as to show how
+    metrics vary depending on the raw data input
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
