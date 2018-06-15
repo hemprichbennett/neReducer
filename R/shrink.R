@@ -15,7 +15,7 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
 
 
   #Decide which rows to keep and which to discard
-  #cat('ncol mat = ', ncol(mat), '\n')
+  #print(cat('dim before', dim(mat),'\n'))
   to_keep <- sample(seq(1, ncol(mat)), n_cols)
   #cat('n_cols to use is ', n_cols, '\n')
   #Make a dataframe of all of their metadata
@@ -50,7 +50,7 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
   #Shrink the matrix to the desired columns
 
   shrunkmat <- mat[,to_keep]
-
+  #print(cat('dim after', dim(shrunkmat), '\n'))
   #Rename the columns so that everything after the hyphen is removed
   colnames(shrunkmat) <- gsub('-.+', '', colnames(shrunkmat))
   #merge the duplicate columns (drop=F is required so that it can still rowsum columns which are unique)
