@@ -38,6 +38,6 @@ two_net_example <- netreducing(input = input_list, input_type = 'list', n_iterat
 library(ggplot2)
 ggplot(two_net_example, aes(x=n_used, y= metricval, colour = netnames))+ geom_point()+ geom_smooth(method = lm)+
   labs(x = 'Number of samples used', y = 'Degree')
-
-![alt text](example_images/examplescatter.png)
 ```
+![alt text](example_images/examplescatter.png)
+
