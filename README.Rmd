@@ -15,10 +15,10 @@ install_github('hemprichbennett/netReducer')
 library(netReducer)
 
 #Generate two example matrixes to analyse
-trialmat1 <- matrix(sample(c(0,1),100, replace = T), nrow = 10)
+trialmat1 <- matrix(sample(c(0,1),100, replace = T, prob = c(0.75, 0.25), nrow = 10)
 colnames(trialmat1) <- c('Hice-001', 'Hice-002',	'Rhtr-001',	'Rhtr-008',	 'Keha-0005', 'Keha-01A', 'Hice-005', 'Rhtr-010', 'Hidi-001', 'Hice-087')
 #trialmat1
-trialmat2 <- matrix(sample(c(0,1),100, replace = T), nrow = 10)
+trialmat2 <- matrix(sample(c(0,1),100, replace = T, prob = c(0.85, 0.15)), nrow = 10)
 colnames(trialmat2) <- c('Hidy-001', 'Hidy-002',	'Rhtr-001',	'Rhtr-008',	 'Keha-0005', 'Keha-01A', 'Hidy-005', 'Rhtr-010', 'Hidi-001', 'Hidy-087')
 
 
@@ -29,11 +29,15 @@ input_list <- list('trialmat1' = trialmat1, 'trialmat2' = trialmat2)
 #Here a single matrix is analysed
 one_net_example <- netreducing(input = trialmat1, input_type = 'matrix', n_iterations = 10, min_nodes = 5, metric_chosen = 'connectance', type_chosen = 'network')
 
-head(one_net_example)
 
 #Here multiple matrixes in a list are analysed
 two_net_example <- netreducing(input = input_list, input_type = 'list', n_iterations = 10, min_nodes = 5, metric_chosen = 'degree', type_chosen = 'species', level = 'higher')
 
-head(two_net_example)
 
+#Plot the outputs
+library(ggplot2)
+ggplot(two_net_example, aes(x=n_used, y= metricval, colour = netnames))+ geom_point()+ geom_smooth(method = lm)+
+  labs(x = 'Number of samples used', y = 'Degree')
+
+![alt text](example_images/examplescatter.png)
 ```
