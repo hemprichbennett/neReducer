@@ -1,8 +1,18 @@
 shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='network', network_level =NA){
 
+  #' calculate variance in network level metrics caused by sample size used
+  #'
+  #' Used by \code{\link{netreducing}}
+  #'
+  #' @return Sends values to netreducing
+  #' @export
+  #' @examples pending
+  #'
+  #'
   if(!metric_type %in% c('network', 'species', 'modularity')){
     stop('acceptable metric types are \'network\', \'species\', \'modularity\'')
   }
+
 
   #Decide which rows to keep and which to discard
   #cat('ncol mat = ', ncol(mat), '\n')
@@ -57,8 +67,24 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
   }else if(metric_type=='species'){
     spvals <- bipartite::specieslevel(shrunkmat, index = metric, level = network_level)
 
-    #Add it to the metadata
-    shrunkmeta$metricval <- spvals
+    #print(shrunkmeta)
+    #print(spvals)
+    #print(rownames(spvals))
+    #print(to_keep)
+    #Adding this to the metadata is a bit more complicated, as the number of rows we get back doesn't match how many
+    #rows are in shrunkmeta
+
+    shrunkmeta$metricval <- rep(NA, nrow(shrunkmeta))
+    #print(shrunkmeta)
+
+    for(i in 1:nrow(spvals)){
+      matches <- which(shrunkmeta$Species==rownames(spvals)[i]) #Find the rows which we need to add it to
+      matches <- matches[which(matches %in% to_keep)]
+      #cat(rownames(spvals)[i], matches, '\n')
+      #print(spvals[i,])
+      shrunkmeta$metricval[matches] <- spvals[i,]
+    }
+
 
   }else if(metric_type=='modularity'){
     mod <- bipartite::computeModules(shrunkmat, steps = 1E6)@likelihood
