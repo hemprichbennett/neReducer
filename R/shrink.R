@@ -59,7 +59,12 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
 
   #Calculate the metric
   if(metric_type=='network'){
-    metricval <- bipartite::networklevel(shrunkmat, index = metric, level = network_level)
+    if(!is.na(network_level)){
+      metricval <- bipartite::networklevel(shrunkmat, index = metric, level = network_level)
+    }else{
+      metricval <- bipartite::networklevel(shrunkmat, index = metric)
+    }
+
 
     #Add it to the metadata
     shrunkmeta$metricval <- rep(metricval, nrow(shrunkmeta))
