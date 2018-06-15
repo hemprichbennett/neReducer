@@ -1,11 +1,15 @@
-shrink <- function(mat, n_cols, itval=NA, netname = NA){
+shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='network', network_level =NA){
+
+  if(!metric_type %in% c('network', 'species', 'modularity')){
+    stop('acceptable metric types are \'network\', \'species\', \'modularity\'')
+  }
 
   #Decide which rows to keep and which to discard
-  cat('ncol mat = ', ncol(mat), '\n')
+  #cat('ncol mat = ', ncol(mat), '\n')
   to_keep <- sample(seq(1, ncol(mat)), n_cols)
-
+  #cat('n_cols to use is ', n_cols, '\n')
   #Make a dataframe of all of their metadata
-  print(netname)
+  #print(netname)
   shrunkmeta <- data.frame(strsplit(colnames(mat), split = '-'))
   shrunkmeta <- t(shrunkmeta)
   shrunkmeta <- as.data.frame(shrunkmeta)
@@ -21,9 +25,13 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA){
   shrunkmeta$included[-to_keep] <- 'not_included'
   shrunkmeta$included <- as.factor(shrunkmeta$included)
 
+  #Optional formatting
   if(!is.na(itval)){
     shrunkmeta$iteration <- rep(itval, nrow(shrunkmeta))
-    print(itval)
+    shrunkmeta$n_used <- rep(n_cols, nrow(shrunkmeta))
+
+  }
+  if(!is.na(netname)){
     shrunkmeta$netnames <- rep(netname, nrow(shrunkmeta))
   }
 
@@ -39,7 +47,30 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA){
   shrunkmat <- sapply(unique(colnames(shrunkmat)), function(x) rowSums(shrunkmat[,grepl(x, colnames(shrunkmat)), drop = F]))
 
 
-  outlist <- list(shrunkmat, shrunkmeta)
-  names(outlist) <- c('shrunkmat', 'shrunkmeta')
-  return(outlist)
+  #Calculate the metric
+  if(metric_type=='network'){
+    metricval <- bipartite::networklevel(shrunkmat, index = metric)
+
+    #Add it to the metadata
+    shrunkmeta$metricval <- rep(metricval, nrow(shrunkmeta))
+
+  }else if(metric_type=='species'){
+    spvals <- bipartite::specieslevel(shrunkmat, index = metric, level = network_level)
+
+    #Add it to the metadata
+    shrunkmeta$metricval <- spvals
+
+  }else if(metric_type=='modularity'){
+    mod <- bipartite::computeModules(shrunkmat, steps = 1E6)@likelihood
+
+    #Add it to the metadata
+    shrunkmeta$metricval <- rep(mod, nrow(shrunkmeta))
+
+  }
+
+    #Add the metrics name to the df
+    shrunkmeta$metricused <- rep(metric, nrow(shrunkmeta))
+
+  return(shrunkmeta)
+
 }
