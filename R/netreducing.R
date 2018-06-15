@@ -1,7 +1,9 @@
 netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_chosen, type_chosen, level = NA){
   #' calculate variance in network level metrics caused by sample size used
   #'
-  #' Acts as a wrapper for the \code{\link{shrink}} function
+  #' Acts as a wrapper for the \code{\link{shrink}} function. IMPORTANT: the columns of your matrix must be named speciesname-samplename,
+  #' with a hyphen separating them. E.g. species1-sample1, species2-sampleb, etc etc. The hyphen is used to split the names and so is (currently)
+  #' non-negotiable.
   #'
   #' @param input Your input object
   #' @param input_type The type of your input object. Can be either 'matrix' or 'list'
@@ -46,10 +48,14 @@ netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_c
     list_output <-  sapply(seq(1,n_iterations), function(it)
       sapply(seq_along(input), function(y)
         lapply(seq(min_nodes,ncol(input[[y]])-1), function(n) setup(iteration = it, net = input[[y]], netname = names(input)[y], n_col = n))) )
-
+    #trial, see the dim of the output items
+    #lapply(list_output, function(x) print(dim(x)))
     #make it into a dataframe
-    bigdf <- do.call(rbind, list_output)
+    #for(i in 1: length(list_output)){print(dim(list_output[[i]]))}
+    bigdf <- do.call(rbind, lapply(list_output, function(x) do.call(rbind, x)))
+    #bigdf <- do.call(rbind, list_output)
     return(bigdf)
+    #return(list_output)
   }
 
 
