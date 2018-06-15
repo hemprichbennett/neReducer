@@ -9,6 +9,9 @@ The function used by the user can accept either individual matrixes, or a list o
 
 # Example vignette
 ```
+library(devtools)
+install_github('hemprichbennett/netReducer')
+
 library(netReducer)
 
 #Generate two example matrixes to analyse
