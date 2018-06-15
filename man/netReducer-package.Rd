@@ -4,7 +4,7 @@
 \name{netReducer-package}
 \alias{netReducer}
 \alias{netReducer-package}
-\title{netReducer: Reduces the number of individuals used to make a composite matrix, analysing the impact}
+\title{netReducer: Analysing the impact of sample size and species composition in network analysis}
 \description{
 The package takes your raw matrices, and repeatedly analyses a given subset of nodes, so as to show how
 metrics vary depending on the raw data input
