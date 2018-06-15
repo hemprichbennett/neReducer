@@ -8,7 +8,22 @@ netreducing(input, input_type, n_iterations = 100, min_nodes, metric_chosen,
   type_chosen, level = NA)
 }
 \arguments{
-\item{input}{Your input}
+\item{input}{Your input object}
+
+\item{input_type}{The type of your input object. Can be either 'matrix' or 'list'}
+
+\item{n_iterations}{The number of iterations you wish to perform per number of nodes selected}
+
+\item{min_nodes}{The minimum number of columns to be allowed in the matrix tested. For example, if you input a matrix with ten
+columns and set a min_nodes of 5, the function will test your network with 5, 6, 7, 8, and 9 nodes.}
+
+\item{metric_chosen}{The metric you would like to analyse. Can be any value allowed by bipartite for the networklevel
+or specieslevel functions, or if 'modularity' is chosen, it will use computemodules to calculate modularity}
+
+\item{type_chosen}{The type of metric desired. Can either be 'network' for a networklevel metric, 'species' for
+a specieslevel metric, or 'modularity' for modularity}
+
+\item{level}{The network level desired to be analysed.}
 }
 \value{
 Produces a dataframe showing the changes in a given metric when varying the number of nodes in your matrix

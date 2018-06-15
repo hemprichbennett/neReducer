@@ -3,7 +3,16 @@ netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_c
   #'
   #' Acts as a wrapper for the \code{\link{shrink}} function
   #'
-  #' @param input Your input
+  #' @param input Your input object
+  #' @param input_type The type of your input object. Can be either 'matrix' or 'list'
+  #' @param n_iterations The number of iterations you wish to perform per number of nodes selected
+  #' @param min_nodes The minimum number of columns to be allowed in the matrix tested. For example, if you input a matrix with ten
+  #' columns and set a min_nodes of 5, the function will test your network with 5, 6, 7, 8, and 9 nodes.
+  #' @param metric_chosen The metric you would like to analyse. Can be any value allowed by bipartite for the networklevel
+  #' or specieslevel functions, or if 'modularity' is chosen, it will use computemodules to calculate modularity
+  #' @param type_chosen The type of metric desired. Can either be 'network' for a networklevel metric, 'species' for
+  #' a specieslevel metric, or 'modularity' for modularity
+  #' @param level The network level desired to be analysed.
   #' @return Produces a dataframe showing the changes in a given metric when varying the number of nodes in your matrix
   #' @export
   #' @examples pending
