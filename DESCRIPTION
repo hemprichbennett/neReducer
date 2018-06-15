@@ -2,6 +2,7 @@ Package: netReducer
 Type: Package
 Title: Reduces the number of individuals used to make a composite matrix, analysing the impact
 Version: 0.1.0
+Date: 2018-06-15
 Authors@R: person("David", "Hemprich-Bennett", email = "hemprich.bennett@gmail.com",role = c("aut", "cre"))
 Maintainer: David Hemprich-Bennett <hemprich.bennett@gmail.com>
 Description: The package takes your raw matrices, and repeatedly analyses a given subset of nodes, so as to show how
