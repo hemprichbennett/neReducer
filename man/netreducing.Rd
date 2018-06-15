@@ -29,7 +29,9 @@ a specieslevel metric, or 'modularity' for modularity}
 Produces a dataframe showing the changes in a given metric when varying the number of nodes in your matrix
 }
 \description{
-Acts as a wrapper for the \code{\link{shrink}} function
+Acts as a wrapper for the \code{\link{shrink}} function. IMPORTANT: the columns of your matrix must be named speciesname-samplename,
+with a hyphen separating them. E.g. species1-sample1, species2-sampleb, etc etc. The hyphen is used to split the names and so is (currently)
+non-negotiable.
 }
 \examples{
 pending
