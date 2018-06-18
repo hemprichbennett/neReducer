@@ -15,6 +15,7 @@ netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_c
   #' @param type_chosen The type of metric desired. Can either be 'network' for a networklevel metric, 'species' for
   #' a specieslevel metric, or 'modularity' for modularity
   #' @param level The network level desired to be analysed.
+  #' @param collapse_cols Should the columns be collapsed by species? I.e. is this a species-based or individual-based analysis
   #' @return Produces a dataframe showing the changes in a given metric when varying the number of nodes in your matrix
   #' @export
   #' @examples pending

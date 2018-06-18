@@ -5,7 +5,7 @@
 \title{calculate variance in network level metrics caused by sample size used}
 \usage{
 shrink(mat, n_cols, itval = NA, netname = NA, metric,
-  metric_type = "network", network_level = NA)
+  metric_type = "network", network_level = NA, collapse = T)
 }
 \value{
 Sends values to netreducing

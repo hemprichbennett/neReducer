@@ -5,7 +5,7 @@
 \title{calculate variance in network level metrics caused by sample size used}
 \usage{
 netreducing(input, input_type, n_iterations = 100, min_nodes, metric_chosen,
-  type_chosen, level = NA)
+  type_chosen, level = NA, collapse_cols = T)
 }
 \arguments{
 \item{input}{Your input object}
@@ -24,6 +24,8 @@ or specieslevel functions, or if 'modularity' is chosen, it will use computemodu
 a specieslevel metric, or 'modularity' for modularity}
 
 \item{level}{The network level desired to be analysed.}
+
+\item{collapse_cols}{Should the columns be collapsed by species? I.e. is this a species-based or individual-based analysis}
 }
 \value{
 Produces a dataframe showing the changes in a given metric when varying the number of nodes in your matrix
