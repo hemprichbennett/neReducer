@@ -62,11 +62,10 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
 
   }
   else if(collapse==F){
-    shrunkmeta$orig <- colnames(mat)
+    shrunkmeta <- data.frame(orig= colnames(mat), included= rep(NA, nrow(shrunkmeta)))
     shrunkmeta$orig <- as.factor(shrunkmeta$orig)
 
     #Make a column showing which were included in the iteration
-    shrunkmeta$included <- rep(NA, nrow(shrunkmeta))
     shrunkmeta$included[to_keep] <- 'included'
     shrunkmeta$included[-to_keep] <- 'not_included'
     shrunkmeta$included <- as.factor(shrunkmeta$included)
