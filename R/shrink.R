@@ -21,7 +21,7 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
   #Make a dataframe of all of their metadata
   #print(netname)
 
-  if(collapse=T){
+  if(collapse==T){
 
     shrunkmeta <- data.frame(strsplit(colnames(mat), split = '-'))
     shrunkmeta <- t(shrunkmeta)
@@ -61,7 +61,7 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
     shrunkmat <- sapply(unique(colnames(shrunkmat)), function(x) rowSums(shrunkmat[,grepl(x, colnames(shrunkmat)), drop = F]))
 
   }
-  else if(collapse=F){
+  else if(collapse==F){
     shrunkmeta$orig <- colnames(mat)
     shrunkmeta$orig <- as.factor(shrunkmeta$orig)
 
