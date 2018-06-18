@@ -34,8 +34,8 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
 
     #Make a column showing which were included in the iteration
     shrunkmeta$included <- rep(NA, nrow(shrunkmeta))
-    shrunkmeta$included[to_keep] <- 'included'
-    shrunkmeta$included[-to_keep] <- 'not_included'
+    shrunkmeta$included[to_keep] <- T
+    shrunkmeta$included[-to_keep] <- F
     shrunkmeta$included <- as.factor(shrunkmeta$included)
 
     #Optional formatting
@@ -62,12 +62,12 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
 
   }
   else if(collapse==F){
-    shrunkmeta <- data.frame(orig= colnames(mat), included= rep(NA, nrow(shrunkmeta)))
+    shrunkmeta <- data.frame(orig= colnames(mat), included= rep(NA, ncol(mat)))
     shrunkmeta$orig <- as.factor(shrunkmeta$orig)
 
     #Make a column showing which were included in the iteration
-    shrunkmeta$included[to_keep] <- 'included'
-    shrunkmeta$included[-to_keep] <- 'not_included'
+    shrunkmeta$included[to_keep] <- T
+    shrunkmeta$included[-to_keep] <- F
     shrunkmeta$included <- as.factor(shrunkmeta$included)
 
     #Optional formatting
@@ -115,13 +115,22 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
     #print(shrunkmeta)
 
     for(i in 1:nrow(spvals)){
-      matches <- which(shrunkmeta$Species==rownames(spvals)[i]) #Find the rows which we need to add it to
-      matches <- matches[which(matches %in% to_keep)]
-      #cat(rownames(spvals)[i], matches, '\n')
-      #print(spvals[i,])
-      shrunkmeta$metricval[matches] <- spvals[i,]
-    }
+      if(collapse==T){
+        matches <- which(shrunkmeta$Species==rownames(spvals)[i]) #Find the rows which we need to add it to
+        matches <- matches[which(matches %in% to_keep)]
+        #cat(rownames(spvals)[i], matches, '\n')
+        #print(spvals[i,])
+        shrunkmeta$metricval[matches] <- spvals[i,]
+      }else{
+        matches <- which(shrunkmeta$orig==rownames(spvals)[i]) #Find the rows which we need to add it to
+        matches <- matches[which(matches %in% to_keep)]
+        #cat(rownames(spvals)[i], matches, '\n')
+        #print(spvals[i,])
+        shrunkmeta$metricval[matches] <- spvals[i,]
+      }
 
+    }
+    #print(shrunkmeta)
 
   }else if(metric_type=='modularity'){
     mod <- bipartite::computeModules(shrunkmat, steps = 1E6)@likelihood
