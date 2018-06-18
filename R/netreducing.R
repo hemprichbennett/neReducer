@@ -59,10 +59,21 @@ netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_c
     #lapply(list_output, function(x) print(dim(x)))
     #make it into a dataframe
     #for(i in 1: length(list_output)){print(dim(list_output[[i]]))}
-    bigdf <- do.call(rbind, lapply(list_output, function(x) do.call(rbind, x)))
-    #bigdf <- do.call(rbind, list_output)
-    return(bigdf)
+
+
+    #For reasons I'm not completely sure of, the number of list levels seems to vary between datasets and so different do.call/rbinds
+    #are needed. This does it.
+    if(is.null(names(list_output[[1]]))){
+      #print('NULL')
+      bigdf <- do.call(rbind, lapply(list_output, function(x) do.call(rbind, x)))
+    }else{
+      #print('not NULL')
+      bigdf <- do.call(rbind, list_output)
+    }
+
+
     #return(list_output)
+    return(bigdf)
   }
 
 
