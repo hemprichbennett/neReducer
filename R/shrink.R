@@ -1,4 +1,4 @@
-shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='network', network_level =NA){
+shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='network', network_level =NA, collapse = T){
 
   #' calculate variance in network level metrics caused by sample size used
   #'
@@ -54,7 +54,12 @@ shrink <- function(mat, n_cols, itval=NA, netname = NA, metric, metric_type='net
   #Rename the columns so that everything after the hyphen is removed
   colnames(shrunkmat) <- gsub('-.+', '', colnames(shrunkmat))
   #merge the duplicate columns (drop=F is required so that it can still rowsum columns which are unique)
-  shrunkmat <- sapply(unique(colnames(shrunkmat)), function(x) rowSums(shrunkmat[,grepl(x, colnames(shrunkmat)), drop = F]))
+  if(collapse==T){
+    shrunkmat <- sapply(unique(colnames(shrunkmat)), function(x) rowSums(shrunkmat[,grepl(x, colnames(shrunkmat)), drop = F]))
+  }else{
+    shrunkmat <- mat[,to_keep] #For if we're not collapsing the columns (I.e. an individual-based analysis)
+  }
+
 
 
   #Calculate the metric

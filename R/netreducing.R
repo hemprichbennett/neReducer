@@ -1,4 +1,4 @@
-netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_chosen, type_chosen, level = NA){
+netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_chosen, type_chosen, level = NA, collapse_cols =T){
   #' calculate variance in network level metrics caused by sample size used
   #'
   #' Acts as a wrapper for the \code{\link{shrink}} function. IMPORTANT: the columns of your matrix must be named speciesname-samplename,
@@ -35,8 +35,14 @@ netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_c
 
   #A little function to pass values to shrink in a slightly easier manner
   setup <- function(iteration, net, netname=NA, n_col){
+    if(collapse_cols==T){
+      return(shrink(net, n_cols = n_col, itval = iteration, netname = netname, metric = metric_chosen, metric_type = type_chosen, network_level = level, collapse = T))
+    }
+    if(collapse_cols==F){
+      return(shrink(net, n_cols = n_col, itval = iteration, netname = netname, metric = metric_chosen, metric_type = type_chosen, network_level = level, collapse = F))
+    }
 
-    return(shrink(net, n_cols = n_col, itval = iteration, netname = netname, metric = metric_chosen, metric_type = type_chosen, network_level = level))
+
   }
 
 
