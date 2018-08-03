@@ -5,7 +5,7 @@
 \title{calculates how much of a network's perceived structure is due to the influence of a given species}
 \usage{
 removing_and_randomizing(network, index, network_level = "higher",
-  sums_to_preserve = "both", datatype = "list")
+  sums_to_preserve = "both", datatype = "list", nreplicates = 1000)
 }
 \arguments{
 \item{network}{Your input object}
@@ -17,6 +17,8 @@ removing_and_randomizing(network, index, network_level = "higher",
 \item{sums_to_preserve}{preserve sums of columns, rows, or both}
 
 \item{datatype}{is it a matrix of interactions, or a list of matrixes?}
+
+\item{nreplicates}{How many iterations of the randomisation should be done per species removal}
 }
 \value{
 gives a dataset of values when you remove a species from a network, and the values obtained
@@ -27,5 +29,6 @@ This function removes each species in turn, randomizing the resulting matrix and
 desired metric value for the resulting random subnetworks
 }
 \examples{
-pending
+mat <- matrix(nrow =10, ncol =10, sample(c(0,1), 100, prob = c(0.6, 0.4), replace = T))
+removing_and_randomizing(network = mat, index = 'modularity', datatype = 'matrix')
 }

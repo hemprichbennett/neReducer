@@ -1,4 +1,4 @@
-removing_and_randomizing <- function(network, index, network_level = 'higher', sums_to_preserve = 'both', datatype='list'){
+removing_and_randomizing <- function(network, index, network_level = 'higher', sums_to_preserve = 'both', datatype='list', nreplicates= 1000){
 
 
   #' calculates how much of a network's perceived structure is due to the influence of a given species
@@ -11,10 +11,13 @@ removing_and_randomizing <- function(network, index, network_level = 'higher', s
   #' @param network_level The network level to be removing and randomizing. Currently only 'higher' works
   #' @param sums_to_preserve preserve sums of columns, rows, or both
   #' @param datatype is it a matrix of interactions, or a list of matrixes?
+  #' @param nreplicates How many iterations of the randomisation should be done per species removal
   #' @return gives a dataset of values when you remove a species from a network, and the values obtained
   #' when randomising this subnetwork
+  #' @examples
+  #' mat <- matrix(nrow =10, ncol =10, sample(c(0,1), 100, prob = c(0.6, 0.4), replace = T))
+  #' removing_and_randomizing(network = mat, index = 'modularity', datatype = 'matrix')
   #' @export
-  #' @examples pending
 
   call_reduce <- function(net, ind, network_level = 'higher', sums_to_preserve = 'both', datatype='list'){
     if(!datatype %in% c('matrix', 'list')){
@@ -50,10 +53,21 @@ removing_and_randomizing <- function(network, index, network_level = 'higher', s
     sp_col <- which(colnames(net)==sp)
     sub_net <- net[,-sp_col]
     #Calculate the 'actual' value for when that species is missing
-    actual <- networklevel(sub_net, index = index_used, level = network_level)
-    #Calculate the random values
-    rand_vals <- replicate(1000, bipartite::networklevel(vegan::permatswap(sub_net, fixedmar=sums_to_preserve,mtype="count",times=1, method="quasiswap")$perm[[1]],
-                                                         index = index_used, level = network_level))
+
+    if(index_used != 'modularity'){
+      actual <- networklevel(net, index = index_used, level = network_level)
+      #Calculate the random values
+      rand_vals <- replicate(nreplicates, bipartite::networklevel(vegan::permatswap(sub_net, fixedmar=sums_to_preserve,mtype="count",times=1, method="quasiswap")$perm[[1]],
+                                                           index = index_used, level = network_level))
+    }
+    if(index_used == 'modularity'){
+
+      actual <- slot(bipartite::computeModules(web=net), 'likelihood')
+
+
+      rand_vals <- replicate(nreplicates,slot(bipartite::computeModules(web = vegan::permatswap(sub_net, fixedmar=sums_to_preserve,mtype="count",times=1, method="quasiswap")$perm[[1]]), 'likelihood'))
+
+    }
 
     quants <- quantile(rand_vals, probs=c(0.025, 0.975))
 
