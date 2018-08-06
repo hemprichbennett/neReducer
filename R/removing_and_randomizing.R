@@ -55,14 +55,14 @@ removing_and_randomizing <- function(network, index, network_level = 'higher', s
     #Calculate the 'actual' value for when that species is missing
 
     if(index_used != 'modularity'){
-      actual <- networklevel(net, index = index_used, level = network_level)
+      actual <- networklevel(sub_net, index = index_used, level = network_level)
       #Calculate the random values
       rand_vals <- replicate(nreplicates, bipartite::networklevel(vegan::permatswap(sub_net, fixedmar=sums_to_preserve,mtype="count",times=1, method="quasiswap")$perm[[1]],
                                                            index = index_used, level = network_level))
     }
     if(index_used == 'modularity'){
 
-      actual <- slot(bipartite::computeModules(web=net), 'likelihood')
+      actual <- slot(bipartite::computeModules(web=sub_net), 'likelihood')
 
 
       rand_vals <- replicate(nreplicates,slot(bipartite::computeModules(web = vegan::permatswap(sub_net, fixedmar=sums_to_preserve,mtype="count",times=1, method="quasiswap")$perm[[1]]), 'likelihood'))
