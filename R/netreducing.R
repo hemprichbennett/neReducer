@@ -1,4 +1,4 @@
-netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_chosen, type_chosen, level = NA, collapse_cols =T){
+netreducing <- function(input, input_type, n_iterations = 100, min_nodes, metric_chosen, type_chosen, level = NA, collapse_cols = T) {
   #' calculate variance in network level metrics caused by sample size used
   #'
   #' Acts as a wrapper for the \code{\link{shrink}} function. IMPORTANT: the columns of your matrix must be named speciesname-samplename,
@@ -22,57 +22,62 @@ netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_c
 
 
 
-  if(!input_type %in% c('matrix', 'list')){
-    stop('input_type can only be matrix or list')
+  if (!input_type %in% c("matrix", "list")) {
+    stop("input_type can only be matrix or list")
   }
 
-  if(type_chosen=='species' & !level %in% c('higher', 'lower')){
-    stop('error, for species level metrics you must specify \'level\' as either higher or lower')
+  if (type_chosen == "species" & !level %in% c("higher", "lower")) {
+    stop("error, for species level metrics you must specify 'level' as either higher or lower")
   }
 
 
 
 
 
-  #A little function to pass values to shrink in a slightly easier manner
-  setup <- function(iteration, net, netname=NA, n_col){
-    if(collapse_cols==T){
-      return(shrink(net, n_cols = n_col, itval = iteration, netname = netname, metric = metric_chosen, metric_type = type_chosen, network_level = level, collapse = T))
+  # A little function to pass values to shrink in a slightly easier manner
+  setup <- function(iteration, net, netname = NA, n_col) {
+    if (collapse_cols == T) {
+      return(shrink(net, n_cols = n_col, itval = iteration, netname = netname,
+                    metric = metric_chosen, metric_type = type_chosen,
+                    network_level = level, collapse = T))
     }
-    if(collapse_cols==F){
-      return(shrink(net, n_cols = n_col, itval = iteration, netname = netname, metric = metric_chosen, metric_type = type_chosen, network_level = level, collapse = F))
+    if (collapse_cols == F) {
+      return(shrink(net, n_cols = n_col, itval = iteration, netname = netname,
+                    metric = metric_chosen, metric_type = type_chosen,
+                    network_level = level, collapse = F))
     }
-
-
   }
 
 
 
-  #if a list is input
+  # if a list is input
 
-  #A horrendous giant nested apply, but it works
-  if(input_type=='list'){
-    list_output <-  sapply(seq(1,n_iterations), function(it)
+  # A horrendous giant nested apply, but it works
+  if (input_type == "list") {
+    list_output <- sapply(seq(1, n_iterations), function(it)
       sapply(seq_along(input), function(y)
-        lapply(seq(min_nodes,ncol(input[[y]])-1), function(n) setup(iteration = it, net = input[[y]], netname = names(input)[y], n_col = n))) )
-    #trial, see the dim of the output items
-    #lapply(list_output, function(x) print(dim(x)))
-    #make it into a dataframe
-    #for(i in 1: length(list_output)){print(dim(list_output[[i]]))}
+        lapply(seq(min_nodes, ncol(input[[y]]) - 1), function(n)
+          setup(iteration = it, net = input[[y]], netname = names(input)[y],
+                n_col = n))))
+    # trial, see the dim of the output items
+    # lapply(list_output, function(x) print(dim(x)))
+    # make it into a dataframe
+    # for(i in 1: length(list_output)){print(dim(list_output[[i]]))}
 
 
-    #For reasons I'm not completely sure of, the number of list levels seems to vary between datasets and so different do.call/rbinds
-    #are needed. This does it.
-    if(is.null(names(list_output[[1]]))){
-      #print('NULL')
+    # For reasons I'm not completely sure of, the number of list levels seems
+    # to vary between datasets and so different do.call/rbinds are needed.
+    # This does it.
+    if (is.null(names(list_output[[1]]))) {
+      # print('NULL')
       bigdf <- do.call(rbind, lapply(list_output, function(x) do.call(rbind, x)))
-    }else{
-      #print('not NULL')
+    } else {
+      # print('not NULL')
       bigdf <- do.call(rbind, list_output)
     }
 
 
-    #return(list_output)
+    # return(list_output)
     return(bigdf)
   }
 
@@ -80,17 +85,14 @@ netreducing <- function(input, input_type, n_iterations=100, min_nodes, metric_c
 
 
 
-  #If a single matrix is input
-  if(input_type == 'matrix'){
-    tem <- lapply(seq(1, n_iterations), function(it) lapply(seq(min_nodes,ncol(input)-1), function(n) setup(iteration = it, net = input, n_col = n)))
+  # If a single matrix is input
+  if (input_type == "matrix") {
+    tem <- lapply(seq(1, n_iterations), function(it)
+      lapply(seq(min_nodes, ncol(input) - 1), function(n)
+        setup(iteration = it, net = input, n_col = n)))
 
-    #make it into a dataframe
+    # make it into a dataframe
     outdf <- do.call(rbind, lapply(tem, function(x) do.call(rbind, x)))
     return(outdf)
   }
-
-
-
 }
-
-
